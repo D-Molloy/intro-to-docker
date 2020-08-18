@@ -1,17 +1,17 @@
 # Complete Intro to Docker Notes
 
-[Notes](https://btholt.github.io/complete-intro-to-containers/)
+[Course Handbook](https://btholt.github.io/complete-intro-to-containers/)
 
 Handy commands:
 
 \$ docker build -t [APP-NAME] .
 
-\$ docker run --init --rm -p [PORT]:[PORT][app-name]
+\$ docker run --init --rm -p [PORT-EXTERNAL]:[PORT-INTERNAL][app-name] //to run web server
 
 \$ docker run -it [container:version] //run the image and
 put you on the cmd line
 
-\$ docker image prune - remove all images stored on computer
+\$ docker image/volume prune - remove all images/volumes stored on computer
 
 -it === interactive
 
@@ -38,20 +38,23 @@ What are the options for deploying?
 1 - chroot - a Linux command that allows you to set the root directory of a new process. The new container group of processes can't see anything outside of it, eliminating our security problem because the new process has no visibility outside of its new root.
 
 - create a new docker container with ubuntu installed and show the command line:
+
   \$ docker run -it --name docker-host --rm --privileged ubuntu:bionic
 
 You need to bring/cp everything (cat, ls, cp, etc) over manually when sitting in and chroot'd directory because it think that root is '/' (because it cant read outside of itself to get to any binary that exists outside
 
 - To check which version of linux your container is using run:
   \$ cat /etc/issue
+
   // Ubuntu 18.04.4 LTS \n \l
+
   CHROOT'd directories can still potentially see the running processes via 'ps'
-  ENTER:
 
 2 - Namespaces - limiting the visibility of containerized/chroot'd directories. The host can see children, but children can't see outside of themselves
 
 //this will connect to the same docker environment/container
 \$ docker exec -it docker-host bash
+
 // 'ps aux' will list processes and you can 'kill any of them
 
 //use debootstrap to setup a chrootable environment with basic tool needed
@@ -78,3 +81,10 @@ This will create a new environment that's isolated on the system with its own PI
 Every isolated environment has access to all physical resources of the server. There's no isolation of physical components from these environments.
 
 Enter the hero of this story: cgroups, or control groups. Google saw this same problem when building their own infrastructure and wanted to protect runaway processes from taking down entire servers and made this idea of cgroups so you can say "this isolated environment only gets so much CPU, so much memory, etc. and once it's out of those it's out-of-luck, it won't get any more."
+
+Bind mounts - dev containers
+Volume mounts - persisting data (logs, dbs)
+tempfs - temp filesystem (secrets/security?)
+windows containers - work diff than linux containers - full windows os (called Pipes)
+
+[Containers for Dev Environment](https://btholt.github.io/complete-intro-to-containers/dev-containers)
