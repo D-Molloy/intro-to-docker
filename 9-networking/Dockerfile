@@ -1,5 +1,7 @@
 FROM node:12-stretch
 
+RUN npm i -g nodemon
+
 USER node
 
 # need to create the dir with node user.  Relying on WORKDIR sets user to root
@@ -26,4 +28,4 @@ RUN npm ci
 # docker run --init --rm -p 3000:3000 my-node-app ls -lsah
 # EXPOSE 3000
 #but Brian says its better to be explicit so that you can choose the port.  Can be useful to include in dockerfile so that others know what to publish it on
-CMD ["node", "index.js"]
+CMD ["nodemon", "index.js"]

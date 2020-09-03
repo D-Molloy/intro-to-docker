@@ -1,0 +1,26 @@
+# the docker-compose version
+version: "3"
+services:
+  web:
+    # where the dockerfile is
+    build: .
+    # give a bulleted list of what ports you want to export where
+    ports:
+      - "3000:3000"
+    #   declare where to mount our code in the container (a bind mount)
+    volumes:
+      - .:/home/node/code
+      # don't bring over the node_modules
+      - /home/node/code/node_modules
+    #   make the web container talk to the following containers (these are started first bc the web container relies on them)
+    links:
+      - db
+    #   define environment variables
+    environment:
+      MONGO_CONNECTION_STRING: mongodb://db:27017
+  # setting up a separate db container
+  db:
+    image: mongo:3
+
+# To run properly and rebuild after changes to dockerfile, run 
+# docker-compose up --build
